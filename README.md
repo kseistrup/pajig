@@ -43,8 +43,9 @@ Use ‘pinky help COMMAND’ or ‘pinky COMMAND --help’ to see usage details
 for COMMAND.
 
 Create a custom COMMAND (or override the current COMMAND) by installing a
-script ‘pinky-COMMAND’ with the desired functionality in the same directory
-as pinky itself. The script should accept at least the option ‘--help’.
+script called ‘pinky-COMMAND’ with the desired functionality in the same
+directory as pinky itself. The script should accept at least the option
+‘--help’.
 ```
 
 ## Requirements
