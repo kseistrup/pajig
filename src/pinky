@@ -1,0 +1,485 @@
+#!/bin/bash
+# -*- mode: sh; coding: utf-8 -*-
+ME="${0##*/}"
+##############################################################################
+# This program is free software; you can redistribute it and/or modify it    #
+# under the terms of the GNU General Public License as published by the Free #
+# Software Foundation; either version 3 of the License, or (at your option)  #
+# any later version.                                                         #
+#                                                                            #
+# This program is distributed in the hope that it will be useful, but with-  #
+# out any warranty; without even the implied warranty of merchantability or  #
+# fitness for a particular purpose. See the GNU General Public License for   #
+# more details. <http://gplv3.fsf.org/>                                      #
+##############################################################################
+
+MY_APPNAME='pinky'
+MY_AUTHOR='Klaus Alexander Seistrup <klaus@seistrup.dk>'
+MY_REVISION='2016-10-11'
+MY_VERSION="0.0.1α (${MY_REVISION})"
+MY_COPYRIGHT="\
+pinky/${MY_VERSION}
+Copyright © 2016 ${MY_AUTHOR}
+
+This is free software; see the source for copying conditions. There is no
+warranty; not even for merchantability or fitness for a particular purpose.\
+"
+MY_HELP="
+Usage: ${ME} [OPTIONS] COMMAND [ARG…]
+
+Options are:
+  -h, --help ............ display this help and exit
+  -v, --version ......... output version information and exit
+  -c, --copyright ....... show copying policy and exit
+
+Commands are:
+  autoremove ............ remove dependencies that are no longer needed
+  changelog ............. show the changelog of a package
+  check ................. check the local package database
+  checkfiles ............ check the files owned by the given package(s)
+  clean ................. clean cache(s)
+  depends, deps ......... show package information and dependencies
+  downloadonly........... download packages only, don't install or upgrade
+  foreign, alien......... show packages not found in sync database(s)
+  help .................. get help for a given command
+  info, details ......... display information on a given package
+  install ............... install package(s)
+  listfiles, lf ......... list files in package
+  listinstalled, li ..... generate a list of installed packages
+  owns, owner ........... search for packages that own given file(s)
+  purge ................. recursively remove package(s)
+  rdepends, rdeps ....... show package information and reverse dependencies
+  refresh, update ....... download a fresh copy of the package database
+  reinstall ............. reinstall given package(s)
+  remove, rm ............ remove package(s)
+  search ................ search for names or descriptions
+  sysupgrade, upgrade ... upgrade all packages that are out-of-date
+  unrequired, orphans ... list packages not required by installed packages
+  upgrades, toupgrade ... list packages that are out-of-date
+
+Use ‘${ME} help COMMAND’ or ‘${ME} COMMAND --help’ to see usage details
+for COMMAND.
+
+Create a custom COMMAND (or override the current COMMAND) by installing a
+script ‘${ME}-COMMAND’ with the desired functionality in the same directory
+as ${ME} itself. The script should accept at least the option ‘--help’.
+"
+
+die () {
+  [[ -n "${1}" ]] && {
+    echo "${ME}:" "${@}" >&2
+    exit 1
+  }
+  exit 0
+}
+
+my_help () {
+  echo "${MY_HELP}"
+}
+
+my_version () {
+  echo "${MY_APPNAME}/${MY_VERSION}"
+}
+
+my_copyright () {
+  echo "${MY_COPYRIGHT}"
+}
+
+my_doc () {
+  local opt="${1}"
+  local doc="${2}"
+
+  case "${opt}" in
+    -h | --help )
+      [[ -n "${doc}" ]] && echo "usage: ${ME} ${doc}"
+      die
+    ;;
+  esac
+}
+
+my_check_root () {
+  [[ "${EUID}" -eq 0 ]] && {
+    [[ -z "${FAKEROOTKEY}" ]] && {
+      die 'please do not run this script as root'
+    }
+  }
+}
+
+# Rosetta
+#   https://wiki.archlinux.org/index.php/Pacman/Rosetta
+
+# pinky autoremove
+pinky_autoremove () {
+  local opt="${1}"
+  local doc="autoremove"
+
+  my_doc "${opt}" "${doc}"
+
+  pacman --query --deps --unrequired --quiet \
+  | xargs --no-run-if-empty \
+      sudo -- pacman --remove --recursive
+  exit "${?}"
+}
+
+# pinky changelog PACKAGE…
+pinky_check () {
+  local opt="${1}"
+  local doc="changelog PACKAGE…"
+
+  my_doc "${opt}" "${doc}"
+
+  exec pacman --query --changelog "${@}"
+}
+
+# pinky check
+pinky_check () {
+  local opt="${1}"
+  local doc="check [OPTION…]"
+
+  my_doc "${opt}" "${doc}"
+
+  exec pacman --database --check "${@}"
+}
+
+# pinky checkfiles
+pinky_checkfiles () {
+  local opt="${1}"
+  local doc="checkfiles [OPTION…]"
+
+  my_doc "${opt}" "${doc}"
+
+  exec sudo -- pacman --query --check "${@}"
+}
+
+# pinky clean
+pinky_clean () {
+  local opt="${1}"
+  local doc="clean"
+
+  my_doc "${opt}" "${doc}"
+
+  exec sudo -- pacman --sync --clean --clean "${@}"
+}
+
+# pinky depends PACKAGE…
+pinky_depends () {
+  local opt="${1}"
+  local doc="depends PACKAGE…"
+
+  my_doc "${opt}" "${doc}"
+
+  exec pacman --query --info "${@}"
+}
+
+# pinky downloadonly PACKAGE…
+pinky_downloadonly () {
+  local opt="${1}"
+  local doc="downloadonly PACKAGE…"
+
+  my_doc "${opt}" "${doc}"
+
+  exec pacman --sync --downloadonly "${@}"
+}
+
+# pinky foreign
+pinky_foreign () {
+  local opt="${1}"
+  local doc="foreign"
+
+  my_doc "${opt}" "${doc}"
+
+  exec pacman --query --foreign "${@}"
+}
+
+# pinky help [COMMAND]
+pinky_help () {
+  local cmd="${1}"
+  local doc="help [COMMAND]"
+  local mycmd
+  local mytype
+  local separator
+
+  [[ -z "${cmd}" ]] && {
+    my_help
+    die
+  }
+  my_doc "${cmd}" "${doc}"
+
+  for separator in '_' '-'
+  do
+    mycmd="${ME}${separator}${cmd}"
+    mytype=$(type -t "${mycmd}" || :)
+
+    case "${mytype}" in
+      "alias" | "file" | "function" )
+        eval '${mycmd}' --help
+        exit "${?:-1}"
+      ;;
+    esac
+  done
+
+  die "no such command: ${cmd}"
+}
+
+# pinky info PACKAGE…
+pinky_info () {
+  local opt="${1}"
+  local doc="info PACKAGE…"
+
+  my_doc "${opt}" "${doc}"
+
+  exec pacman --sync --info "${@}"
+}
+
+# pinky install PACKAGE…
+pinky_install () {
+  local opt="${1}"
+  local doc="install PACKAGE…"
+  local last
+
+  my_doc "${opt}" "${doc}"
+
+  : "${@}"
+  last="${_}"
+
+  case "${last}" in
+    *.pkg.tar.xz )
+      exec sudo -- pacman --upgrade --needed "${@}"
+    ;;
+  esac
+  exec sudo -- pacman --sync --needed "${@}"
+}
+
+# pinky listfiles [PACKAGE…]
+pinky_listfiles () {
+  local opt="${1}"
+  local doc="listfiles [PACKAGE…]"
+
+  my_doc "${opt}" "${doc}"
+
+  exec pacman --query --list "${@}"
+}
+
+# pinky listinstalled
+pinky_listinstalled () {
+  local opt="${1}"
+  local doc="listinstalled"
+
+  my_doc "${opt}" "${doc}"
+
+  exec pacman --query
+}
+
+# pinky owns [OPTION…] [FILE…]
+pinky_owns () {
+  local opt="${1}"
+  local doc="owns [OPTION…] [FILE…]"
+
+  my_doc "${opt}" "${doc}"
+
+  exec pacman --query --owns "${@}"
+}
+
+# pinky purge PACKAGE…
+pinky_purge () {
+  local opt="${1}"
+  local doc="purge PACKAGE…"
+
+  my_doc "${opt}" "${doc}"
+
+  exec sudo -- pacman --remove --nosave --recursive "${@}"
+}
+
+# pinky rdepends PACKAGE…
+pinky_rdepends () {
+  local opt="${1}"
+  local doc="rdepends PACKAGE…"
+
+  my_doc "${opt}" "${doc}"
+
+  exec pacman --query --info --info "${@}"
+}
+
+# pinky refresh [OPTION…]
+pinky_refresh () {
+  local opt="${1}"
+  local doc="refresh [OPTION…]"
+
+  my_doc "${opt}" "${doc}"
+
+  exec sudo -- pacman --sync --refresh "${@}"
+}
+
+# pinky remove PACKAGE…
+pinky_refresh () {
+  local opt="${1}"
+  local doc="remove PACKAGE…"
+
+  my_doc "${opt}" "${doc}"
+
+  exec sudo -- pacman --remove "${@}"
+}
+
+# pinky reinstall PACKAGE…
+pinky_reinstall () {
+  local opt="${1}"
+  local doc="reinstall PACKAGE…"
+
+  my_doc "${opt}" "${doc}"
+
+  exec sudo -- pacman --sync "${@}"
+}
+
+# pinky search REGEXP
+pinky_search () {
+  local opt="${1}"
+  local doc="search REGEXP"
+
+  my_doc "${opt}" "${doc}"
+
+       pacman --sync  --search "${@}" && exit 0
+  exec pacman --query --search "${@}"
+}
+
+# pinky sysupgrade [OPTION…]
+pinky_sysupgrade () {
+  local opt="${1}"
+  local doc="sysupgrade [OPTION…]"
+
+  my_doc "${opt}" "${doc}"
+
+  exec sudo -- pacman --sync --sysupgrade "${@}"
+}
+
+# pinky unrequired
+pinky_unrequired () {
+  local opt="${1}"
+  local doc="unrequired"
+
+  my_doc "${opt}" "${doc}"
+
+  exec pacman --query --deps --unrequired "${@}"
+}
+
+# pinky toupgrade [OPTION…]
+pinky_upgrades () {
+  local opt="${1}"
+  local doc="toupgrade [OPTION…]"
+
+  my_doc "${opt}" "${doc}"
+
+  exec pacman --query --upgrades "${@}"
+}
+
+# Main entry point
+main () {
+  local me="${1}"
+  local cmd="${2}"
+  local ext="${me}-${cmd}"
+
+  my_check_root
+
+  [[ -z "${cmd}" ]] && {
+    my_help >&2
+    exit 1
+  }
+  shift 2
+
+  # If we have an extension, use that one —
+  # even if it overrules our builtin commands.
+  [[ -x "${ext}" ]] && {
+    exec "${ext}" "${@}"
+  }
+
+  case "${cmd}" in
+    # Options
+    -h | --help )
+      my_help
+    ;;
+    -v | --version )
+      my_version
+    ;;
+    -c | --copyright )
+      my_copyright
+    ;;
+    # Commands
+    autoremove | autorm )
+      pinky_autoremove "${@}"
+    ;;
+    changelog )
+      pinky_changelog "${@}"
+    ;;
+    check )
+      pinky_check "${@}"
+    ;;
+    checkfiles )
+      pinky_checkfiles "${@}"
+    ;;
+    clean )
+      pinky_clean "${@}"
+    ;;
+    depends | deps | dep )
+      pinky_depends "${@}"
+    ;;
+    downloadonly | download )
+      pinky_downloadonly "${@}"
+    ;;
+    foreign | alien )
+      pinky_foreign "${@}"
+    ;;
+    help )
+      pinky_help "${@}"
+    ;;
+    info | details | detail )
+      pinky_info "${@}"
+    ;;
+    install )
+      pinky_install "${@}"
+    ;;
+    listfiles | lf )
+      pinky_listfiles "${@}"
+    ;;
+    listinstalled | li )
+      pinky_listinstalled "${@}"
+    ;;
+    owns | owner | own | owned )
+      pinky_owns "${@}"
+    ;;
+    purge )
+      pinky_purge "${@}"
+    ;;
+    rdepends | rdeps | rdep )
+      pinky_rdepends "${@}"
+    ;;
+    refresh | update )
+      pinky_refresh "${@}"
+    ;;
+    reinstall )
+      pinky_reinstall "${@}"
+    ;;
+    remove | rm )
+      pinky_remove "${@}"
+    ;;
+    search )
+      pinky_search "${@}"
+    ;;
+    sysupgrade | upgrade )
+      pinky_sysupgrade "${@}"
+    ;;
+    unrequired | unreq | orphans | orphan )
+      pinky_unrequired "${@}"
+    ;;
+    upgrades | toupgrade )
+      pinky_upgrades "${@}"
+    ;;
+    # We're out of luck
+    * )
+      die "no such command: ${cmd}"
+    ;;
+  esac
+}
+
+main "${0}" "${@}"
+
+:
+# eof
