@@ -1,9 +1,10 @@
 # Pinky
-Pinky is a convenience wrapper for ArchLinux' `pacman` command inspired
-by Debian's [wajig](https://packages.debian.org/wajig).
+Pinky is a convenience wrapper for ArchLinux' [pacman](https://wiki.archlinux.org/index.php/Pacman)
+command inspired by Debian's [wajig](https://packages.debian.org/wajig).
 
 ![Pinky](img/pinkyghost.png)
 
+## Usage
 ```
 Usage: pinky [OPTIONS] COMMAND [ARG…]
 
