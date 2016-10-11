@@ -16,7 +16,7 @@ ME="${0##*/}"
 MY_APPNAME='pinky'
 MY_AUTHOR='Klaus Alexander Seistrup <klaus@seistrup.dk>'
 MY_REVISION='2016-10-11'
-MY_VERSION="0.1.1α (${MY_REVISION})"
+MY_VERSION="0.1.2α (${MY_REVISION})"
 MY_COPYRIGHT="\
 pinky/${MY_VERSION}
 Copyright © 2016 ${MY_AUTHOR}
@@ -123,7 +123,7 @@ pinky_autoremove () {
 }
 
 # pinky changelog PACKAGE…
-pinky_check () {
+pinky_changelog () {
   local opt="${1}"
   local doc="changelog PACKAGE…"
 
@@ -362,10 +362,10 @@ pinky_unrequired () {
   exec pacman --query --deps --unrequired "${@}"
 }
 
-# pinky toupgrade [OPTION…]
+# pinky upgrades [OPTION…]
 pinky_upgrades () {
   local opt="${1}"
-  local doc="toupgrade [OPTION…]"
+  local doc="upgrades [OPTION…]"
 
   my_doc "${opt}" "${doc}"
 
