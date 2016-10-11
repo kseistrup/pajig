@@ -42,7 +42,7 @@ Commands are:
 Use ‘pinky help COMMAND’ or ‘pinky COMMAND --help’ to see usage details
 for COMMAND.
 
-Create a custom COMMAND (or override the current COMMAND) by installing a
+Create a custom COMMAND (or override a builtin COMMAND) by installing a
 script called ‘pinky-COMMAND’ with the desired functionality in the same
 directory as pinky itself. The script should accept at least the option
 ‘--help’.
