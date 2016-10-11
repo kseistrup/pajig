@@ -50,6 +50,7 @@ directory as pinky itself. The script should accept at least the option
 
 ## Requirements
 
+* pacman
 * bash
 * sudo
 * xargs (from findutils)
