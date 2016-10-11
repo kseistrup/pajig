@@ -16,7 +16,7 @@ ME="${0##*/}"
 MY_APPNAME='pinky'
 MY_AUTHOR='Klaus Alexander Seistrup <klaus@seistrup.dk>'
 MY_REVISION='2016-10-11'
-MY_VERSION="0.1.2α (${MY_REVISION})"
+MY_VERSION="0.1.3α (${MY_REVISION})"
 MY_COPYRIGHT="\
 pinky/${MY_VERSION}
 Copyright © 2016 ${MY_AUTHOR}
@@ -60,7 +60,7 @@ Commands are:
 Use ‘${ME} help COMMAND’ or ‘${ME} COMMAND --help’ to see usage details
 for COMMAND.
 
-Create a custom COMMAND (or override the current COMMAND) by installing a
+Create a custom COMMAND (or override a builtin COMMAND) by installing a
 script called ‘${ME}-COMMAND’ with the desired functionality in the same
 directory as ${ME} itself. The script should accept at least the option
 ‘--help’.
