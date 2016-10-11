@@ -16,7 +16,7 @@ ME="${0##*/}"
 MY_APPNAME='pinky'
 MY_AUTHOR='Klaus Alexander Seistrup <klaus@seistrup.dk>'
 MY_REVISION='2016-10-11'
-MY_VERSION="0.0.1α (${MY_REVISION})"
+MY_VERSION="0.0.2α (${MY_REVISION})"
 MY_COPYRIGHT="\
 pinky/${MY_VERSION}
 Copyright © 2016 ${MY_AUTHOR}
@@ -311,7 +311,7 @@ pinky_refresh () {
 }
 
 # pinky remove PACKAGE…
-pinky_refresh () {
+pinky_remove () {
   local opt="${1}"
   local doc="remove PACKAGE…"
 
