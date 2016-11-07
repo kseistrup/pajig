@@ -1,13 +1,13 @@
-# Pinky
-Pinky is a convenience wrapper written in bash for ArchLinux'
+# Pajig
+Pajig is a convenience wrapper written in bash for ArchLinux'
 [pacman](https://wiki.archlinux.org/index.php/Pacman) command,
 inspired by Debian's [wajig](https://packages.debian.org/wajig).
 
-![Pinky](img/pinkyghost.png)
+![Pajig](img/pinkyghost.png)
 
 ## Usage
 ```
-Usage: pinky [OPTIONS] COMMAND [ARG…]
+Usage: pajig [OPTIONS] COMMAND [ARG…]
 
 Options are:
   -h, --help ............ display this help and exit
@@ -39,12 +39,12 @@ Commands are:
   unrequired, orphans ... list packages not required by installed packages
   upgrades, toupgrade ... list packages that are out-of-date
 
-Use ‘pinky help COMMAND’ or ‘pinky COMMAND --help’ to see usage details
+Use ‘pajig help COMMAND’ or ‘pajig COMMAND --help’ to see usage details
 for COMMAND.
 
 Create a custom COMMAND (or override a builtin COMMAND) by installing a
-script called ‘pinky-COMMAND’ with the desired functionality in the same
-directory as pinky itself. The script should accept at least the option
+script called ‘pajig-COMMAND’ with the desired functionality in the same
+directory as pajig itself. The script should accept at least the option
 ‘--help’.
 ```
 

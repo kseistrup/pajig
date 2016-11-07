@@ -13,12 +13,12 @@ ME="${0##*/}"
 # more details. <http://gplv3.fsf.org/>                                      #
 ##############################################################################
 
-MY_APPNAME='pinky'
+MY_APPNAME='pajig'
 MY_AUTHOR='Klaus Alexander Seistrup <klaus@seistrup.dk>'
-MY_REVISION='2016-10-11'
-MY_VERSION="0.1.3α (${MY_REVISION})"
+MY_REVISION='2016-11-07'
+MY_VERSION="0.2.0α (${MY_REVISION})"
 MY_COPYRIGHT="\
-pinky/${MY_VERSION}
+pajig/${MY_VERSION}
 Copyright © 2016 ${MY_AUTHOR}
 
 This is free software; see the source for copying conditions. There is no
@@ -109,8 +109,8 @@ my_check_root () {
 # Rosetta
 #   https://wiki.archlinux.org/index.php/Pacman/Rosetta
 
-# pinky autoremove
-pinky_autoremove () {
+# pajig autoremove
+pajig_autoremove () {
   local opt="${1}"
   local doc="autoremove"
 
@@ -122,8 +122,8 @@ pinky_autoremove () {
   exit "${?}"
 }
 
-# pinky changelog PACKAGE…
-pinky_changelog () {
+# pajig changelog PACKAGE…
+pajig_changelog () {
   local opt="${1}"
   local doc="changelog PACKAGE…"
 
@@ -132,8 +132,8 @@ pinky_changelog () {
   exec pacman --query --changelog "${@}"
 }
 
-# pinky check
-pinky_check () {
+# pajig check
+pajig_check () {
   local opt="${1}"
   local doc="check [OPTION…]"
 
@@ -142,8 +142,8 @@ pinky_check () {
   exec pacman --database --check "${@}"
 }
 
-# pinky checkfiles
-pinky_checkfiles () {
+# pajig checkfiles
+pajig_checkfiles () {
   local opt="${1}"
   local doc="checkfiles [OPTION…]"
 
@@ -152,8 +152,8 @@ pinky_checkfiles () {
   exec sudo -- pacman --query --check "${@}"
 }
 
-# pinky clean
-pinky_clean () {
+# pajig clean
+pajig_clean () {
   local opt="${1}"
   local doc="clean"
 
@@ -162,8 +162,8 @@ pinky_clean () {
   exec sudo -- pacman --sync --clean --clean "${@}"
 }
 
-# pinky depends PACKAGE…
-pinky_depends () {
+# pajig depends PACKAGE…
+pajig_depends () {
   local opt="${1}"
   local doc="depends PACKAGE…"
 
@@ -172,8 +172,8 @@ pinky_depends () {
   exec pacman --query --info "${@}"
 }
 
-# pinky downloadonly PACKAGE…
-pinky_downloadonly () {
+# pajig downloadonly PACKAGE…
+pajig_downloadonly () {
   local opt="${1}"
   local doc="downloadonly PACKAGE…"
 
@@ -182,8 +182,8 @@ pinky_downloadonly () {
   exec pacman --sync --downloadonly "${@}"
 }
 
-# pinky foreign
-pinky_foreign () {
+# pajig foreign
+pajig_foreign () {
   local opt="${1}"
   local doc="foreign"
 
@@ -192,8 +192,8 @@ pinky_foreign () {
   exec pacman --query --foreign "${@}"
 }
 
-# pinky help [COMMAND]
-pinky_help () {
+# pajig help [COMMAND]
+pajig_help () {
   local cmd="${1}"
   local doc="help [COMMAND]"
   local mycmd
@@ -222,8 +222,8 @@ pinky_help () {
   die "no such command: ${cmd}"
 }
 
-# pinky info PACKAGE…
-pinky_info () {
+# pajig info PACKAGE…
+pajig_info () {
   local opt="${1}"
   local doc="info PACKAGE…"
 
@@ -232,8 +232,8 @@ pinky_info () {
   exec pacman --sync --info "${@}"
 }
 
-# pinky install PACKAGE…
-pinky_install () {
+# pajig install PACKAGE…
+pajig_install () {
   local opt="${1}"
   local doc="install PACKAGE…"
   local last
@@ -251,8 +251,8 @@ pinky_install () {
   exec sudo -- pacman --sync --needed "${@}"
 }
 
-# pinky listfiles [PACKAGE…]
-pinky_listfiles () {
+# pajig listfiles [PACKAGE…]
+pajig_listfiles () {
   local opt="${1}"
   local doc="listfiles [PACKAGE…]"
 
@@ -261,8 +261,8 @@ pinky_listfiles () {
   exec pacman --query --list "${@}"
 }
 
-# pinky listinstalled
-pinky_listinstalled () {
+# pajig listinstalled
+pajig_listinstalled () {
   local opt="${1}"
   local doc="listinstalled"
 
@@ -271,8 +271,8 @@ pinky_listinstalled () {
   exec pacman --query
 }
 
-# pinky owns [OPTION…] [FILE…]
-pinky_owns () {
+# pajig owns [OPTION…] [FILE…]
+pajig_owns () {
   local opt="${1}"
   local doc="owns [OPTION…] [FILE…]"
 
@@ -281,8 +281,8 @@ pinky_owns () {
   exec pacman --query --owns "${@}"
 }
 
-# pinky purge PACKAGE…
-pinky_purge () {
+# pajig purge PACKAGE…
+pajig_purge () {
   local opt="${1}"
   local doc="purge PACKAGE…"
 
@@ -291,8 +291,8 @@ pinky_purge () {
   exec sudo -- pacman --remove --nosave --recursive "${@}"
 }
 
-# pinky rdepends PACKAGE…
-pinky_rdepends () {
+# pajig rdepends PACKAGE…
+pajig_rdepends () {
   local opt="${1}"
   local doc="rdepends PACKAGE…"
 
@@ -301,8 +301,8 @@ pinky_rdepends () {
   exec pacman --query --info --info "${@}"
 }
 
-# pinky refresh [OPTION…]
-pinky_refresh () {
+# pajig refresh [OPTION…]
+pajig_refresh () {
   local opt="${1}"
   local doc="refresh [OPTION…]"
 
@@ -311,8 +311,8 @@ pinky_refresh () {
   exec sudo -- pacman --sync --refresh "${@}"
 }
 
-# pinky remove PACKAGE…
-pinky_remove () {
+# pajig remove PACKAGE…
+pajig_remove () {
   local opt="${1}"
   local doc="remove PACKAGE…"
 
@@ -321,8 +321,8 @@ pinky_remove () {
   exec sudo -- pacman --remove "${@}"
 }
 
-# pinky reinstall PACKAGE…
-pinky_reinstall () {
+# pajig reinstall PACKAGE…
+pajig_reinstall () {
   local opt="${1}"
   local doc="reinstall PACKAGE…"
 
@@ -331,8 +331,8 @@ pinky_reinstall () {
   exec sudo -- pacman --sync "${@}"
 }
 
-# pinky search REGEXP
-pinky_search () {
+# pajig search REGEXP
+pajig_search () {
   local opt="${1}"
   local doc="search REGEXP"
 
@@ -342,8 +342,8 @@ pinky_search () {
   exec pacman --query --search "${@}"
 }
 
-# pinky sysupgrade [OPTION…]
-pinky_sysupgrade () {
+# pajig sysupgrade [OPTION…]
+pajig_sysupgrade () {
   local opt="${1}"
   local doc="sysupgrade [OPTION…]"
 
@@ -352,8 +352,8 @@ pinky_sysupgrade () {
   exec sudo -- pacman --sync --sysupgrade "${@}"
 }
 
-# pinky unrequired
-pinky_unrequired () {
+# pajig unrequired
+pajig_unrequired () {
   local opt="${1}"
   local doc="unrequired"
 
@@ -362,8 +362,8 @@ pinky_unrequired () {
   exec pacman --query --deps --unrequired "${@}"
 }
 
-# pinky upgrades [OPTION…]
-pinky_upgrades () {
+# pajig upgrades [OPTION…]
+pajig_upgrades () {
   local opt="${1}"
   local doc="upgrades [OPTION…]"
 
@@ -405,73 +405,73 @@ main () {
     ;;
     # Commands
     autoremove | autorm )
-      pinky_autoremove "${@}"
+      pajig_autoremove "${@}"
     ;;
     changelog )
-      pinky_changelog "${@}"
+      pajig_changelog "${@}"
     ;;
     check )
-      pinky_check "${@}"
+      pajig_check "${@}"
     ;;
     checkfiles )
-      pinky_checkfiles "${@}"
+      pajig_checkfiles "${@}"
     ;;
     clean )
-      pinky_clean "${@}"
+      pajig_clean "${@}"
     ;;
     depends | deps | dep )
-      pinky_depends "${@}"
+      pajig_depends "${@}"
     ;;
     downloadonly | download )
-      pinky_downloadonly "${@}"
+      pajig_downloadonly "${@}"
     ;;
     foreign | alien )
-      pinky_foreign "${@}"
+      pajig_foreign "${@}"
     ;;
     help )
-      pinky_help "${@}"
+      pajig_help "${@}"
     ;;
     info | details | detail )
-      pinky_info "${@}"
+      pajig_info "${@}"
     ;;
     install )
-      pinky_install "${@}"
+      pajig_install "${@}"
     ;;
     listfiles | lf )
-      pinky_listfiles "${@}"
+      pajig_listfiles "${@}"
     ;;
     listinstalled | li )
-      pinky_listinstalled "${@}"
+      pajig_listinstalled "${@}"
     ;;
     owns | owner | own | owned )
-      pinky_owns "${@}"
+      pajig_owns "${@}"
     ;;
     purge )
-      pinky_purge "${@}"
+      pajig_purge "${@}"
     ;;
     rdepends | rdeps | rdep )
-      pinky_rdepends "${@}"
+      pajig_rdepends "${@}"
     ;;
     refresh | update )
-      pinky_refresh "${@}"
+      pajig_refresh "${@}"
     ;;
     reinstall )
-      pinky_reinstall "${@}"
+      pajig_reinstall "${@}"
     ;;
     remove | rm )
-      pinky_remove "${@}"
+      pajig_remove "${@}"
     ;;
     search )
-      pinky_search "${@}"
+      pajig_search "${@}"
     ;;
     sysupgrade | upgrade )
-      pinky_sysupgrade "${@}"
+      pajig_sysupgrade "${@}"
     ;;
     unrequired | unreq | orphans | orphan )
-      pinky_unrequired "${@}"
+      pajig_unrequired "${@}"
     ;;
     upgrades | toupgrade )
-      pinky_upgrades "${@}"
+      pajig_upgrades "${@}"
     ;;
     # We're out of luck
     * )
