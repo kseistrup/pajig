@@ -1,6 +1,6 @@
 # Pajig
-Pajig is a convenience wrapper written in bash for ArchLinux'
-[pacman](https://wiki.archlinux.org/index.php/Pacman) command,
+Pajig (formerly pinky) is a convenience wrapper written in bash for
+ArchLinux' [pacman](https://wiki.archlinux.org/index.php/Pacman) command,
 inspired by Debian's [wajig](https://packages.debian.org/wajig).
 
 ![Pajig](img/pinkyghost.png)
