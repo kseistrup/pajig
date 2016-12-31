@@ -15,8 +15,8 @@ ME="${0##*/}"
 
 MY_APPNAME='pajig'
 MY_AUTHOR='Klaus Alexander Seistrup <klaus@seistrup.dk>'
-MY_REVISION='2016-11-07'
-MY_VERSION="0.2.0α (${MY_REVISION})"
+MY_REVISION='2016-12-31'
+MY_VERSION="0.2.1α (${MY_REVISION})"
 MY_COPYRIGHT="\
 pajig/${MY_VERSION}
 Copyright © 2016 ${MY_AUTHOR}
@@ -179,7 +179,7 @@ pajig_downloadonly () {
 
   my_doc "${opt}" "${doc}"
 
-  exec pacman --sync --downloadonly "${@}"
+  exec sudo -- pacman --sync --downloadonly "${@}"
 }
 
 # pajig foreign
