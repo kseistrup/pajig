@@ -15,17 +15,17 @@ ME="${0##*/}"
 
 MY_APPNAME='pajig'
 MY_AUTHOR='Klaus Alexander Seistrup <klaus@seistrup.dk>'
-MY_REVISION='2016-12-31'
-MY_VERSION="0.2.1α (${MY_REVISION})"
+MY_REVISION='2018-08-07'
+MY_VERSION="0.2.2α ($MY_REVISION)"
 MY_COPYRIGHT="\
-pajig/${MY_VERSION}
-Copyright © 2016 ${MY_AUTHOR}
+pajig/$MY_VERSION
+Copyright © 2016-18 $MY_AUTHOR
 
 This is free software; see the source for copying conditions. There is no
 warranty; not even for merchantability or fitness for a particular purpose.\
 "
 MY_HELP="
-Usage: ${ME} [OPTIONS] COMMAND [ARG…]
+Usage: $ME [OPTIONS] COMMAND [ARG…]
 
 Options are:
   -h, --help ............ display this help and exit
@@ -57,50 +57,50 @@ Commands are:
   unrequired, orphans ... list packages not required by installed packages
   upgrades, toupgrade ... list packages that are out-of-date
 
-Use ‘${ME} help COMMAND’ or ‘${ME} COMMAND --help’ to see usage details
+Use ‘$ME help COMMAND’ or ‘$ME COMMAND --help’ to see usage details
 for COMMAND.
 
 Create a custom COMMAND (or override a builtin COMMAND) by installing a
-script called ‘${ME}-COMMAND’ with the desired functionality in the same
-directory as ${ME} itself. The script should accept at least the option
+script called ‘$ME-COMMAND’ with the desired functionality in the same
+directory as $ME itself. The script should accept at least the option
 ‘--help’.
 "
 
 die () {
-  [[ -n "${1}" ]] && {
-    echo "${ME}:" "${@}" >&2
+  [[ -n "$1" ]] && {
+    echo "$ME:" "$@" >&2
     exit 1
   }
   exit 0
 }
 
 my_help () {
-  echo "${MY_HELP}"
+  echo "$MY_HELP"
 }
 
 my_version () {
-  echo "${MY_APPNAME}/${MY_VERSION}"
+  echo "$MY_APPNAME/$MY_VERSION"
 }
 
 my_copyright () {
-  echo "${MY_COPYRIGHT}"
+  echo "$MY_COPYRIGHT"
 }
 
 my_doc () {
-  local opt="${1}"
-  local doc="${2}"
+  local opt="$1"
+  local doc="$2"
 
-  case "${opt}" in
+  case "$opt" in
     -h | --help )
-      [[ -n "${doc}" ]] && echo "usage: ${ME} ${doc}"
+      [[ -n "$doc" ]] && echo "usage: $ME $doc"
       die
     ;;
   esac
 }
 
 my_check_root () {
-  [[ "${EUID}" -eq 0 ]] && {
-    [[ -z "${FAKEROOTKEY}" ]] && {
+  [[ "$EUID" -eq 0 ]] && {
+    [[ -z "$FAKEROOTKEY" ]] && {
       die 'please do not run this script as root'
     }
   }
@@ -111,10 +111,10 @@ my_check_root () {
 
 # pajig autoremove
 pajig_autoremove () {
-  local opt="${1}"
+  local opt="$1"
   local doc="autoremove"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
   pacman --query --deps --unrequired --quiet \
   | xargs --no-run-if-empty \
@@ -124,275 +124,277 @@ pajig_autoremove () {
 
 # pajig changelog PACKAGE…
 pajig_changelog () {
-  local opt="${1}"
+  local opt="$1"
   local doc="changelog PACKAGE…"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec pacman --query --changelog "${@}"
+  exec pacman --query --changelog "$@"
 }
 
 # pajig check
 pajig_check () {
-  local opt="${1}"
+  local opt="$1"
   local doc="check [OPTION…]"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec pacman --database --check "${@}"
+  exec pacman --database --check "$@"
 }
 
 # pajig checkfiles
 pajig_checkfiles () {
-  local opt="${1}"
+  local opt="$1"
   local doc="checkfiles [OPTION…]"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec sudo -- pacman --query --check "${@}"
+  exec sudo -- pacman --query --check "$@"
 }
 
 # pajig clean
 pajig_clean () {
-  local opt="${1}"
+  local opt="$1"
   local doc="clean"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec sudo -- pacman --sync --clean --clean "${@}"
+  exec sudo -- pacman --sync --clean --clean "$@"
 }
 
 # pajig depends PACKAGE…
 pajig_depends () {
-  local opt="${1}"
+  local opt="$1"
   local doc="depends PACKAGE…"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec pacman --query --info "${@}"
+  exec pacman --query --info "$@"
 }
 
 # pajig downloadonly PACKAGE…
 pajig_downloadonly () {
-  local opt="${1}"
+  local opt="$1"
   local doc="downloadonly PACKAGE…"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec sudo -- pacman --sync --downloadonly "${@}"
+  exec sudo -- pacman --sync --downloadonly "$@"
 }
 
 # pajig foreign
 pajig_foreign () {
-  local opt="${1}"
+  local opt="$1"
   local doc="foreign"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec pacman --query --foreign "${@}"
+  exec pacman --query --foreign "$@"
 }
 
 # pajig help [COMMAND]
 pajig_help () {
-  local cmd="${1}"
+  local cmd="$1"
   local doc="help [COMMAND]"
   local mycmd
   local mytype
   local separator
 
-  [[ -z "${cmd}" ]] && {
+  [[ -z "$cmd" ]] && {
     my_help
     die
   }
-  my_doc "${cmd}" "${doc}"
+  my_doc "$cmd" "$doc"
 
   for separator in '_' '-'
   do
-    mycmd="${ME}${separator}${cmd}"
-    mytype=$(type -t "${mycmd}" || :)
+    mycmd="$ME$separator$cmd"
+    mytype=$(type -t "$mycmd" || :)
 
-    case "${mytype}" in
+    case "$mytype" in
       "alias" | "file" | "function" )
-        eval '${mycmd}' --help
+        eval '$mycmd' --help
         exit "${?:-1}"
       ;;
     esac
   done
 
-  die "no such command: ${cmd}"
+  die "no such command: $cmd"
 }
 
 # pajig info PACKAGE…
 pajig_info () {
-  local opt="${1}"
+  local opt="$1"
   local doc="info PACKAGE…"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec pacman --sync --info "${@}"
+  exec pacman --sync --info "$@"
 }
 
 # pajig install PACKAGE…
 pajig_install () {
-  local opt="${1}"
+  local opt="$1"
   local doc="install PACKAGE…"
   local last
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  : "${@}"
-  last="${_}"
+  : "$@"
+  last="$_"
 
-  case "${last}" in
+  case "$last" in
     *.pkg.tar.xz )
-      exec sudo -- pacman --upgrade --needed "${@}"
+      exec sudo -- pacman --upgrade --needed "$@"
     ;;
   esac
-  exec sudo -- pacman --sync --needed "${@}"
+  exec sudo -- pacman --sync --needed "$@"
 }
 
 # pajig listfiles [PACKAGE…]
 pajig_listfiles () {
-  local opt="${1}"
+  local opt="$1"
   local doc="listfiles [PACKAGE…]"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec pacman --query --list "${@}"
+  exec pacman --query --list "$@"
 }
 
 # pajig listinstalled
 pajig_listinstalled () {
-  local opt="${1}"
+  local opt="$1"
   local doc="listinstalled"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
   exec pacman --query
 }
 
 # pajig owns [OPTION…] [FILE…]
 pajig_owns () {
-  local opt="${1}"
+  local opt="$1"
   local doc="owns [OPTION…] [FILE…]"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec pacman --query --owns "${@}"
+  exec pacman --query --owns "$@"
 }
 
 # pajig purge PACKAGE…
 pajig_purge () {
-  local opt="${1}"
+  local opt="$1"
   local doc="purge PACKAGE…"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec sudo -- pacman --remove --nosave --recursive "${@}"
+  exec sudo -- pacman --remove --nosave --recursive "$@"
 }
 
 # pajig rdepends PACKAGE…
 pajig_rdepends () {
-  local opt="${1}"
+  local opt="$1"
   local doc="rdepends PACKAGE…"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec pacman --query --info --info "${@}"
+  exec pacman --query --info --info "$@"
 }
 
 # pajig refresh [OPTION…]
 pajig_refresh () {
-  local opt="${1}"
+  local opt="$1"
   local doc="refresh [OPTION…]"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec sudo -- pacman --sync --refresh "${@}"
+  exec sudo -- pacman --sync --refresh "$@"
 }
 
 # pajig remove PACKAGE…
 pajig_remove () {
-  local opt="${1}"
+  local opt="$1"
   local doc="remove PACKAGE…"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec sudo -- pacman --remove "${@}"
+  exec sudo -- pacman --remove "$@"
 }
 
 # pajig reinstall PACKAGE…
 pajig_reinstall () {
-  local opt="${1}"
+  local opt="$1"
   local doc="reinstall PACKAGE…"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec sudo -- pacman --sync "${@}"
+  exec sudo -- pacman --sync "$@"
 }
 
 # pajig search REGEXP
 pajig_search () {
-  local opt="${1}"
+  local opt="$1"
   local doc="search REGEXP"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-       pacman --sync  --search "${@}" && exit 0
-  exec pacman --query --search "${@}"
+       pacman --sync  --search "$@" && exit 0
+  exec pacman --query --search "$@"
 }
 
 # pajig sysupgrade [OPTION…]
 pajig_sysupgrade () {
-  local opt="${1}"
+  local opt="$1"
   local doc="sysupgrade [OPTION…]"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec sudo -- pacman --sync --sysupgrade "${@}"
+  exec sudo -- pacman --sync --sysupgrade "$@"
 }
 
 # pajig unrequired
 pajig_unrequired () {
-  local opt="${1}"
+  local opt="$1"
   local doc="unrequired"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec pacman --query --deps --unrequired "${@}"
+  exec pacman --query --deps --unrequired "$@"
 }
 
 # pajig upgrades [OPTION…]
 pajig_upgrades () {
-  local opt="${1}"
+  local opt="$1"
   local doc="upgrades [OPTION…]"
 
-  my_doc "${opt}" "${doc}"
+  my_doc "$opt" "$doc"
 
-  exec pacman --query --upgrades "${@}"
+  exec pacman --query --upgrades "$@"
 }
 
 # Main entry point
 main () {
-  local me="${1}"
-  local cmd="${2}"
-  local ext="${me}-${cmd}"
+  local me="$1"
+  local cmd="$2"
+  local ext="$me-$cmd"
 
   my_check_root
 
-  [[ -z "${cmd}" ]] && {
+  [[ -z "$cmd" ]] && {
     my_help >&2
     exit 1
   }
   shift 2
 
+  umask 022
+
   # If we have an extension, use that one —
   # even if it overrules our builtin commands.
-  [[ -x "${ext}" ]] && {
-    exec "${ext}" "${@}"
+  [[ -x "$ext" ]] && {
+    exec "$ext" "$@"
   }
 
-  case "${cmd}" in
+  case "$cmd" in
     # Options
     -h | --help )
       my_help
@@ -405,82 +407,82 @@ main () {
     ;;
     # Commands
     autoremove | autorm )
-      pajig_autoremove "${@}"
+      pajig_autoremove "$@"
     ;;
     changelog )
-      pajig_changelog "${@}"
+      pajig_changelog "$@"
     ;;
     check )
-      pajig_check "${@}"
+      pajig_check "$@"
     ;;
     checkfiles )
-      pajig_checkfiles "${@}"
+      pajig_checkfiles "$@"
     ;;
     clean )
-      pajig_clean "${@}"
+      pajig_clean "$@"
     ;;
     depends | deps | dep )
-      pajig_depends "${@}"
+      pajig_depends "$@"
     ;;
     downloadonly | download )
-      pajig_downloadonly "${@}"
+      pajig_downloadonly "$@"
     ;;
     foreign | alien )
-      pajig_foreign "${@}"
+      pajig_foreign "$@"
     ;;
     help )
-      pajig_help "${@}"
+      pajig_help "$@"
     ;;
     info | details | detail )
-      pajig_info "${@}"
+      pajig_info "$@"
     ;;
     install )
-      pajig_install "${@}"
+      pajig_install "$@"
     ;;
     listfiles | lf )
-      pajig_listfiles "${@}"
+      pajig_listfiles "$@"
     ;;
     listinstalled | li )
-      pajig_listinstalled "${@}"
+      pajig_listinstalled "$@"
     ;;
     owns | owner | own | owned )
-      pajig_owns "${@}"
+      pajig_owns "$@"
     ;;
     purge )
-      pajig_purge "${@}"
+      pajig_purge "$@"
     ;;
     rdepends | rdeps | rdep )
-      pajig_rdepends "${@}"
+      pajig_rdepends "$@"
     ;;
     refresh | update )
-      pajig_refresh "${@}"
+      pajig_refresh "$@"
     ;;
     reinstall )
-      pajig_reinstall "${@}"
+      pajig_reinstall "$@"
     ;;
     remove | rm )
-      pajig_remove "${@}"
+      pajig_remove "$@"
     ;;
     search )
-      pajig_search "${@}"
+      pajig_search "$@"
     ;;
     sysupgrade | upgrade )
-      pajig_sysupgrade "${@}"
+      pajig_sysupgrade "$@"
     ;;
     unrequired | unreq | orphans | orphan )
-      pajig_unrequired "${@}"
+      pajig_unrequired "$@"
     ;;
     upgrades | toupgrade )
-      pajig_upgrades "${@}"
+      pajig_upgrades "$@"
     ;;
     # We're out of luck
     * )
-      die "no such command: ${cmd}"
+      die "no such command: $cmd"
     ;;
   esac
 }
 
-main "${0}" "${@}"
+main "$0" "$@"
 
 :
 # eof
