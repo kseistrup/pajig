@@ -15,8 +15,8 @@ ME="${0##*/}"
 
 MY_APPNAME='pajig'
 MY_AUTHOR='Klaus Alexander Seistrup <klaus@seistrup.dk>'
-MY_REVISION='2018-10-01'
-MY_VERSION="0.2.2α ($MY_REVISION)"
+MY_REVISION='2'
+MY_VERSION="2018.10.0-$MY_REVISION"
 MY_COPYRIGHT="\
 pajig/$MY_VERSION
 Copyright © 2016-18 $MY_AUTHOR
