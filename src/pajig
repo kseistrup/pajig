@@ -15,7 +15,7 @@ ME="${0##*/}"
 
 MY_APPNAME='pajig'
 MY_AUTHOR='Klaus Alexander Seistrup <klaus@seistrup.dk>'
-MY_REVISION='2018-08-07'
+MY_REVISION='2018-10-01'
 MY_VERSION="0.2.2α ($MY_REVISION)"
 MY_COPYRIGHT="\
 pajig/$MY_VERSION
@@ -39,8 +39,8 @@ Commands are:
   checkfiles ............ check the files owned by the given package(s)
   clean ................. clean cache(s)
   depends, deps ......... show package information and dependencies
-  downloadonly........... download packages only, don't install or upgrade
-  foreign, alien......... show packages not found in sync database(s)
+  downloadonly .......... download packages only, don't install or upgrade
+  foreign, alien ........ show packages not found in sync database(s)
   help .................. get help for a given command
   info, details ......... display information on a given package
   install ............... install package(s)
