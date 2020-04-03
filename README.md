@@ -26,7 +26,7 @@ Commands are:
   help .................. get help for a given command
   info, details ......... display information on a given package
   install ............... install package(s)
-  listfiles, lf ......... list files in package
+  listfiles, lf, ls ..... list files in package
   listinstalled, li ..... generate a list of installed packages
   owns, owner ........... search for packages that own given file(s)
   purge ................. recursively remove package(s)
