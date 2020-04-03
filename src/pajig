@@ -15,7 +15,7 @@ ME="${0##*/}"
 
 MY_APPNAME='pajig'
 MY_AUTHOR='Klaus Alexander Seistrup <klaus@seistrup.dk>'
-MY_REVISION='1'
+MY_REVISION='2'
 MY_VERSION="2020.04.03-$MY_REVISION"
 MY_COPYRIGHT="\
 pajig/$MY_VERSION
@@ -244,7 +244,7 @@ pajig_install () {
   last="$_"
 
   case "$last" in
-    *.pkg.tar.xz )
+    *.pkg.tar.* )
       exec sudo -- pacman --upgrade --needed "$@"
     ;;
   esac
