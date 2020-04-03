@@ -15,11 +15,11 @@ ME="${0##*/}"
 
 MY_APPNAME='pajig'
 MY_AUTHOR='Klaus Alexander Seistrup <klaus@seistrup.dk>'
-MY_REVISION='3'
-MY_VERSION="2018.10.01-$MY_REVISION"
+MY_REVISION='1'
+MY_VERSION="2020.04.03-$MY_REVISION"
 MY_COPYRIGHT="\
 pajig/$MY_VERSION
-Copyright © 2016-18 $MY_AUTHOR
+Copyright © 2016-20 $MY_AUTHOR
 
 This is free software; see the source for copying conditions. There is no
 warranty; not even for merchantability or fitness for a particular purpose.\
@@ -44,7 +44,7 @@ Commands are:
   help .................. get help for a given command
   info, details ......... display information on a given package
   install ............... install package(s)
-  listfiles, lf ......... list files in package
+  listfiles, lf, ls ..... list files in package
   listinstalled, li ..... generate a list of installed packages
   owns, owner ........... search for packages that own given file(s)
   purge ................. recursively remove package(s)
@@ -439,7 +439,7 @@ main () {
     install )
       pajig_install "$@"
     ;;
-    listfiles | lf )
+    listfiles | lf | ls )
       pajig_listfiles "$@"
     ;;
     listinstalled | li )
